@@ -17,10 +17,15 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
     	groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
     	groupmod -g ${BOOT2DOCKER_GID} staff
 
-# alter package sources
-	RUN rm -rf /etc/apt/sources.list
-	ADD other/sources.list /etc/apt/sources.list
-
+# configure defaults
+	ADD configure.sh /configure.sh
+	ADD config /config
+	RUN chmod +x /configure.sh && \
+		chmod 755 /configure.sh
+	RUN /configure.sh && \
+		chmod +x /etc/my_init.d/*.sh && \
+		chmod 755 /etc/my_init.d/*.sh
+	
 # install packages
 	RUN apt-get update && \
 		apt-get install -qy apache2-mpm-event \
@@ -37,38 +42,20 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 			language-pack-de-base \
 			language-pack-de
 
-# alter configuration files & directories
-	RUN rm -rf /app/config/apache2 && \
-		rm -rf /app/config/php5 && \
-		rm -rf /app/htdocs && \
-		rm -rf /app/logs && \
-		rm -rf /var/www/html && \
-		rm -rf /etc/apache2/apache2.conf && \
-		rm -rf /etc/apache2/conf-available/php5-fpm.conf && \
-		rm -rf /etc/apache2/sites-available/000-default.conf && \
-		rm -rf /etc/php5/fpm/php.ini
-	ADD app/config/apache2 /app/config/apache2
-	ADD app/config/php5 /app/config/php5
-	ADD app/htdocs/ /app/htdocs
-	
-# enable apache configuration
+# enable apache2 modules
 	RUN a2enmod actions && \
 		a2enmod rewrite && \
 		a2enmod headers && \
 		a2enmod expires
-
-# add run-scripts
-	ADD other/00_initialize.sh /etc/my_init.d/00_initialize.sh
-	ADD other/01_start_apache2.sh /etc/my_init.d/01_start_apache2.sh
-	ADD other/02_start_php5-fpm.sh /etc/my_init.d/02_start_php5-fpm.sh
-	RUN chmod +x /etc/my_init.d/*.sh && \
-		chmod 755 /etc/my_init.d/*.sh
+		
+# add default /app directory
+	ADD app /app
 
 # cleanup
 	RUN apt-get clean && \
 		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # finalize
-	VOLUME ["/app/htdocs", "/app/config/apache2", "/app/config/php5", "/app/logs"]
+	VOLUME ["/app/htdocs", "/app/logs", "/app/config"]
 	EXPOSE 80
 	EXPOSE 443
