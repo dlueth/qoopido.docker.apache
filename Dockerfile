@@ -50,6 +50,8 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 		
 # add default /app directory
 	ADD app /app
+	RUN mkdir -p /app/htdocs && \
+		mkdir -p /app/logs/apache2
 
 # cleanup
 	RUN apt-get clean && \
