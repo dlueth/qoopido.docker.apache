@@ -25,6 +25,10 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 	RUN /configure.sh && \
 		chmod +x /etc/my_init.d/*.sh && \
 		chmod 755 /etc/my_init.d/*.sh
+		
+# add suhosin repository key
+	ADD suhosin.key /suhosin.key
+	RUN sudo apt-key add suhosin.key
 	
 # install packages
 	RUN apt-get update && \
@@ -39,6 +43,8 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 			php5-mysqlnd \
 			php5-sqlite \
 			php5-apcu \
+			php5-memcached \
+			php5-suhosin-extension \
 			language-pack-de-base \
 			language-pack-de
 
@@ -48,16 +54,20 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 		a2enmod headers && \
 		a2enmod expires
 		
+# enable PHP5 suhosin extension
+	RUN ln -s /etc/php5/mods-available/suhosin.ini /etc/php5/fpm/conf.d/10-suhosin.ini
+		
 # add default /app directory
 	ADD app /app
 	RUN mkdir -p /app/htdocs && \
-		mkdir -p /app/logs/apache2
+		mkdir -p /app/logs/apache2 && \
+		mkdir -p /app/logs/php5
 
 # cleanup
 	RUN apt-get clean && \
-		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /configure.sh
+		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /configure.sh /suhosin.key
 
 # finalize
-	VOLUME ["/app/htdocs", "/app/logs", "/app/config"]
+	VOLUME ["/app/htdocs", "/app/logs", "/app/sessions", "/app/config"]
 	EXPOSE 80
 	EXPOSE 443
