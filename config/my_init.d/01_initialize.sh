@@ -1,11 +1,11 @@
 #!/bin/bash
 
-files=($(find /app/config -type f))
+files=($(find /app/config/apache2 -type f))
 
 for source in "${files[@]}" 
 do
 	pattern="\.DS_Store"
-	target=${source/\/app\/config/\/etc}
+	target=${source/\/app\/config\/apache2/\/etc\/apache2}
 	
 	if [[ ! $target =~ $pattern ]]; then
 		if [[ -f $target ]]; then
