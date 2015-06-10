@@ -24,50 +24,32 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 		chmod 755 /configure.sh
 	RUN /configure.sh && \
 		chmod +x /etc/my_init.d/*.sh && \
-		chmod 755 /etc/my_init.d/*.sh
-		
-# add suhosin repository key
-	ADD suhosin.key /suhosin.key
-	RUN sudo apt-key add suhosin.key
+		chmod 755 /etc/my_init.d/*.sh && \
+		chmod +x /etc/service/apache2/run && \
+		chmod 755 /etc/service/apache2/run
 	
 # install packages
 	RUN apt-get update && \
-		apt-get install -qy apache2-mpm-event \
-			libapache2-mod-fastcgi \
-			php5-common \
-			php5-json \
-			php5-gd \
-			php5-curl \
-			php5-fpm \
-			php5-mcrypt \
-			php5-mysqlnd \
-			php5-sqlite \
-			php5-apcu \
-			php5-memcached \
-			php5-suhosin-extension \
-			language-pack-de-base \
-			language-pack-de
-
-# enable apache2 modules
-	RUN a2enmod actions && \
-		a2enmod rewrite && \
-		a2enmod headers && \
-		a2enmod expires
+		apt-get install -qy apache2-mpm-event
 		
-# enable PHP5 suhosin extension
-	RUN ln -s /etc/php5/mods-available/suhosin.ini /etc/php5/fpm/conf.d/10-suhosin.ini
+# enable apache2 modules
+	RUN a2enmod rewrite && \
+		a2enmod headers && \
+		a2enmod expires && \
+		a2enmod proxy_fcgi && \
+		a2enmod ssl
 		
 # add default /app directory
 	ADD app /app
 	RUN mkdir -p /app/htdocs && \
 		mkdir -p /app/logs/apache2 && \
-		mkdir -p /app/logs/php5
+		rm -rf /var/www/html /var/log/apache2
 
 # cleanup
 	RUN apt-get clean && \
-		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /configure.sh /suhosin.key
+		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /configure.sh
 
 # finalize
-	VOLUME ["/app/htdocs", "/app/logs", "/app/sessions", "/app/config"]
+	VOLUME ["/app/htdocs", "/app/logs", "/app/config"]
 	EXPOSE 80
 	EXPOSE 443

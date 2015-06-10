@@ -1,12 +1,11 @@
 #!/bin/bash
 
-files=($(find ./config -type f))
+files=($(find /app/config -type f))
 
-for path in "${files[@]}" 
+for source in "${files[@]}" 
 do
 	pattern="\.DS_Store"
-	source=${path/\./}
-	target=${path/\.\/config/\/etc}
+	target=${source/\/app\/config/\/etc}
 	
 	if [[ ! $target =~ $pattern ]]; then
 		if [[ -f $target ]]; then
@@ -16,3 +15,8 @@ do
 		echo "    Linking \"$source\" to \"$target\"" && mkdir -p $(dirname "${target}") && ln -s $source $target
 	fi
 done
+
+mkdir -p /app/htdocs
+mkdir -p /app/logs/apache2
+
+a2ensite -q 000-default.conf > /dev/null 2>&1
