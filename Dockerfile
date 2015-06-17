@@ -31,7 +31,7 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 # install packages
 	RUN apt-get update && \
 		apt-get install -qy apache2-mpm-event
-		
+
 # enable apache2 modules
 	RUN a2enmod rewrite && \
 		a2enmod headers && \
@@ -42,6 +42,7 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 # add default /app directory
 	ADD app /app
 	RUN mkdir -p /app/htdocs && \
+		mkdir -p /app/ssl && \
 		mkdir -p /app/logs/apache2 && \
 		rm -rf /var/www/html /var/log/apache2
 
@@ -50,6 +51,6 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /configure.sh
 
 # finalize
-	VOLUME ["/app/htdocs", "/app/logs", "/app/config"]
+	VOLUME ["/app/htdocs", "/app/ssl", "/app/logs", "/app/config"]
 	EXPOSE 80
 	EXPOSE 443

@@ -3,6 +3,8 @@
 # this won't be correct after changing uid
 unset HOME
 
+export HOSTNAME=$(hostname)
+
 # for supporting multiple apache2 instances
 if [ "${APACHE_CONFDIR##/etc/apache2-}" != "${APACHE_CONFDIR}" ] ; then
         SUFFIX="-${APACHE_CONFDIR##/etc/apache2-}"
