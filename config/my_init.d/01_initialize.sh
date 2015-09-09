@@ -1,6 +1,7 @@
 #!/bin/bash
 
 HOSTNAME=$(hostname)
+INIT="/etc/apache2/initialize.sh"
 FILE_KEY="/app/ssl/$HOSTNAME.key"
 FILE_CRT="/app/ssl/$HOSTNAME.crt"
 files=($(find /app/config/apache2 -type f))
@@ -29,3 +30,8 @@ mkdir -p /app/ssl
 mkdir -p /app/logs/apache2
 
 a2ensite -q 000-default.conf > /dev/null 2>&1
+
+if [ -f $INIT ]
+then
+	 chmod +x $INIT && chmod 755 $INIT && eval $INIT;
+fi

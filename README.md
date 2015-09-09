@@ -37,4 +37,6 @@ docker exec -i -t "apache" /bin/bash
 # Project specific configuration #
 Any files under ```/app/config/apache2``` will be symlinked into the container's filesystem beginning at ```/etc/apache2```. This can be used to overwrite the container's default site configuration with a custom, project specific configuration to (e.g.) include php fpm fastCGI proxy (which requires linking a php fpm container).
 
+If you need a custom shell script to be run on start (e.g. to set symlinks) you can do so by creating the file ```/app/config/apache2/initialize.sh```.
+
 SSL certificates will be auto-generated per hostname if no key/crt file can be found in /app/ssl/[hostname].[key|crt]
