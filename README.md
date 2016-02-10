@@ -1,6 +1,6 @@
 # Build container #
 ```
-docker build -t qoopido/apache2 .
+docker build -t qoopido/apache2:1.0.4 .
 ```
 
 # Run container manually ... #
