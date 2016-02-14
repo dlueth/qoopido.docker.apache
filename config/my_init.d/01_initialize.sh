@@ -4,21 +4,25 @@ HOSTNAME=$(hostname)
 INIT="/etc/apache2/initialize.sh"
 FILE_KEY="/app/ssl/$HOSTNAME.key"
 FILE_CRT="/app/ssl/$HOSTNAME.crt"
-files=($(find /app/config/apache2 -type f))
 
-for source in "${files[@]}" 
-do
-	pattern="\.DS_Store"
-	target=${source/\/app\/config\/apache2/\/etc\/apache2}
-	
-	if [[ ! $target =~ $pattern ]]; then
-		if [[ -f $target ]]; then
-			echo "    Removing \"$target\"" && rm -rf $target
+if [ -d /app/config/apache2 ]
+then
+	files=($(find /app/config/apache2 -type f))
+
+	for source in "${files[@]}"
+	do
+		pattern="\.DS_Store"
+		target=${source/\/app\/config\/apache2/\/etc\/apache2}
+
+		if [[ ! $target =~ $pattern ]]; then
+			if [[ -f $target ]]; then
+				echo "    Removing \"$target\"" && rm -rf $target
+			fi
+
+			echo "    Linking \"$source\" to \"$target\"" && mkdir -p $(dirname "${target}") && ln -s $source $target
 		fi
-		
-		echo "    Linking \"$source\" to \"$target\"" && mkdir -p $(dirname "${target}") && ln -s $source $target
-	fi
-done
+	done
+fi
 
 if [ ! -f $FILE_KEY ]
 then
