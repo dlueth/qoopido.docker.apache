@@ -55,4 +55,5 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 # finalize
 	VOLUME ["/app/htdocs", "/app/ssl", "/app/logs", "/app/config"]
 	EXPOSE 80
+	EXPOSE 8080
 	EXPOSE 443
