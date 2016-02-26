@@ -21,6 +21,7 @@ web:
   hostname: [hostname]
   ports:
    - "80:80"
+   - "8080:8080"
    - "443:443"
   volumes:
    - ./config:/app/config
