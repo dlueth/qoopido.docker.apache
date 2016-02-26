@@ -44,8 +44,9 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 # add default /app directory
 	ADD app /app
 	RUN mkdir -p /app/htdocs && \
-		mkdir -p /app/ssl && \
-		mkdir -p /app/logs/apache2 && \
+		mkdir -p /app/data/certificates && \
+		mkdir -p /app/data/logs && \
+		mkdir -p /app/config && \
 		rm -rf /var/www/html /var/log/apache2
 
 # cleanup
@@ -53,7 +54,7 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* /configure.sh
 
 # finalize
-	VOLUME ["/app/htdocs", "/app/ssl", "/app/logs", "/app/config"]
+	VOLUME ["/app/htdocs", "/app/data", "/app/config"]
 	EXPOSE 80
 	EXPOSE 8080
 	EXPOSE 443

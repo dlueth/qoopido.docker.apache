@@ -4,6 +4,7 @@
 unset HOME
 
 export HOSTNAME=$(hostname)
+export APACHE_CERTFICATE_DIR=/app/data/certificates/$SUFFIX
 
 # for supporting multiple apache2 instances
 if [ "${APACHE_CONFDIR##/etc/apache2-}" != "${APACHE_CONFDIR}" ] ; then
@@ -22,7 +23,7 @@ export APACHE_PID_FILE=/var/run/apache2/apache2$SUFFIX.pid
 export APACHE_RUN_DIR=/var/run/apache2$SUFFIX
 export APACHE_LOCK_DIR=/var/lock/apache2$SUFFIX
 # Only /var/log/apache2 is handled by /etc/logrotate.d/apache2.
-export APACHE_LOG_DIR=/app/logs/apache2$SUFFIX
+export APACHE_LOG_DIR=/app/data/logs/$SUFFIX
 
 ## The locale used by some modules like mod_dav
 export LANG=C

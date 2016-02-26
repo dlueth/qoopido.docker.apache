@@ -2,17 +2,17 @@
 
 HOSTNAME=$(hostname)
 INIT="/etc/apache2/initialize.sh"
-FILE_KEY="/app/ssl/$HOSTNAME.key"
-FILE_CRT="/app/ssl/$HOSTNAME.crt"
+FILE_KEY="/app/data/certificates/$HOSTNAME.key"
+FILE_CRT="/app/data/certificates/$HOSTNAME.crt"
 
-if [ -d /app/config/apache2 ]
+if [ -d /app/config ]
 then
-	files=($(find /app/config/apache2 -type f))
+	files=($(find /app/config -type f))
 
 	for source in "${files[@]}"
 	do
 		pattern="\.DS_Store"
-		target=${source/\/app\/config\/apache2/\/etc\/apache2}
+		target=${source/\/app\/config/\/etc\/apache2}
 
 		if [[ ! $target =~ $pattern ]]; then
 			if [[ -f $target ]]; then
@@ -30,8 +30,9 @@ then
 fi
 
 mkdir -p /app/htdocs
-mkdir -p /app/ssl
-mkdir -p /app/logs/apache2
+mkdir -p /app/data/certificates
+mkdir -p /app/data/logs
+mkdir -p /app/config
 
 a2ensite -q 000-default.conf > /dev/null 2>&1
 
