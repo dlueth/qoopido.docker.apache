@@ -46,6 +46,6 @@ The container comes with a default configuration for Apache2 under ```/etc/apach
 
 Any files mounted under ```/app/config``` will be symlinked into the container's filesystem beginning at ```/etc/apache2```. This may be used to overwrite the container's default configuration with a custom, project specific configuration to (e.g.) include php fpm fastCGI proxy (which requires linking a php fpm container). The current hostname is provided as an environment variable for Apache2 so that ```${HOSTNAME}``` may be used in any Apache configuration.
 
-If you need a custom shell script to be run on start (e.g. to set symlinks) you can do so by creating the file ```/app/config/initialize.sh```.
+If you need a custom shell script to be run on start or stop (e.g. to set symlinks) you can do so by creating the file ```/app/config/up.sh``` or ```/app/config/down.sh```.
 
 SSL certificates will be auto-generated per hostname if no key/crt file can be found in ```/app/data/certificates/[hostname].[key|crt]```.
