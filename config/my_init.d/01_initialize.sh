@@ -12,7 +12,7 @@ then
 	for source in "${files[@]}"
 	do
 		pattern="\.DS_Store"
-		target=${source/\/app\/config/\/etc\/apache2}
+		target=${source/\/app\/config/etc\/apache2}
 
 		if [[ ! $target =~ $pattern ]]; then
 			if [[ -f $target ]]; then
