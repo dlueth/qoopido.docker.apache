@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOSTNAME=$(hostname)
-UP="/etc/apache2/up.sh"
+UP="/app/config/up.sh"
 FILE_KEY="/app/data/certificates/$HOSTNAME.key"
 FILE_CRT="/app/data/certificates/$HOSTNAME.crt"
 
@@ -38,5 +38,6 @@ a2ensite -q 000-default.conf > /dev/null 2>&1
 
 if [ -f $UP ]
 then
-	 chmod +x $UP && chmod 755 $UP && eval $UP;
+	echo "    Running startup script /app/config/up.sh"
+	chmod +x $UP && chmod 755 $UP && eval $UP;
 fi
