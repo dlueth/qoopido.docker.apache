@@ -5,18 +5,6 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 	CMD ["/sbin/my_init"]
 	ENV DEBIAN_FRONTEND noninteractive
 
-# based on dgraziotin/docker-osx-lamp
-	ENV DOCKER_USER_ID 501 
-	ENV DOCKER_USER_GID 20
-	ENV BOOT2DOCKER_ID 1000
-	ENV BOOT2DOCKER_GID 50
-
-# Tweaks to give Apache/PHP write permissions to the app
-	RUN usermod -u ${BOOT2DOCKER_ID} www-data && \
-    	usermod -G staff www-data && \
-    	groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && \
-    	groupmod -g ${BOOT2DOCKER_GID} staff
-
 # configure defaults
 	ADD configure.sh /configure.sh
 	ADD config /config
@@ -32,15 +20,18 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
 	RUN apt-get update && \
 		apt-get -qy upgrade && \
     	apt-get -qy dist-upgrade && \
-		apt-get install -qy apache2-mpm-event
+		apt-get install -qy apache2
 
 # enable apache2 modules
 	RUN a2enmod rewrite && \
 		a2enmod headers && \
 		a2enmod expires && \
+		a2enmod ssl && \
+		a2enmod proxy && \
 		a2enmod proxy_fcgi && \
-		a2enmod ssl
-		
+        a2enmod proxy_balancer && \
+        a2enmod proxy_http
+
 # add default /app directory
 	ADD app /app
 	RUN mkdir -p /app/htdocs && \

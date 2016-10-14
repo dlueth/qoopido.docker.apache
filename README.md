@@ -26,18 +26,18 @@ web:
    - "8080:8080"
    - "443:443"
   volumes:
-   - ./htdocs:/app/htdocs
-   - ./config/apache2:/app/config
-   - ./data/apache2:/app/data
+   - ./htdocs:/app/htdocs:z
+   - ./config/apache2:/app/config:z
+   - ./data/apache2:/app/data:z
 ```
 
 # Or start container manually #
 ```
 docker run -d -P -t -i -p 80:80 -p 443:443 \
 	-h [hostname]
-	-v [local path to htdocs]:/app/htdocs \
-	-v [local path to config]:/app/config \
-	-v [local path to data]:/app/data \
+	-v [local path to htdocs]:/app/htdocs:z \
+	-v [local path to config]:/app/config:z \
+	-v [local path to data]:/app/data:z \
 	--name web qoopido/apache2:latest
 ```
 
