@@ -30,6 +30,9 @@ MAINTAINER Dirk Lüth <info@qoopido.com>
         && a2enmod proxy_balancer \
         && a2enmod proxy_http
 
+# enable default config
+	RUN a2ensite 000-default.conf
+
 # add default /app directory
 	ADD app /app
 	RUN mkdir -p /app/htdocs \
