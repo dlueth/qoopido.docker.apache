@@ -1,19 +1,4 @@
 #!/bin/bash
 
-down()
-{
-	local DOWN="/app/config/down.sh"
-
-	if [ -f $DOWN ]
-    then
-    	echo "    Running shutdown script /app/config/down.sh"
-		chmod +x $DOWN && chmod 755 $DOWN && eval $DOWN;
-    fi
-
-    exit
-}
-
-trap down SIGTERM
-
 source /etc/apache2/envvars
-exec /usr/sbin/apache2ctl -k restart -D FOREGROUND  > /dev/null 2>&1 & wait
+exec /usr/sbin/apache2ctl -k restart -D FOREGROUND > /dev/null 2>&1 & wait

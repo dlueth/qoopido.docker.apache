@@ -1,9 +1,13 @@
 #!/bin/bash
 
 HOSTNAME=$(hostname)
-UP="/app/config/up.sh"
 FILE_KEY="/app/data/certificates/$HOSTNAME.key"
 FILE_CRT="/app/data/certificates/$HOSTNAME.crt"
+
+mkdir -p /app/htdocs
+mkdir -p /app/data/certificates
+mkdir -p /app/data/logs
+mkdir -p /app/config
 
 if [ -d /app/config ]
 then
@@ -29,15 +33,4 @@ then
 	openssl req -x509 -nodes -days 36500 -newkey rsa:8192 -keyout $FILE_KEY -out $FILE_CRT -subj "/C=DE/ST=None/L=None/O=None/OU=None/CN=$HOSTNAME"
 fi
 
-mkdir -p /app/htdocs
-mkdir -p /app/data/certificates
-mkdir -p /app/data/logs
-mkdir -p /app/config
-
 a2ensite -q 000-default.conf > /dev/null 2>&1
-
-if [ -f $UP ]
-then
-	echo "    Running startup script /app/config/up.sh"
-	chmod +x $UP && chmod 755 $UP && eval $UP;
-fi
